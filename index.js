@@ -10,6 +10,7 @@ server.use(express.json());
 
 const projects = [];
 
+// Rotas
 server.get('/projects', (req, res) => {
     return res.json(projects);
 });
@@ -32,15 +33,19 @@ server.put('/projects/:id', (req, res) => {
     const { id } = req.params;
     const { title } = req.body;
 
-    projects[id].title =  title ;
+    const project = projects.find(proj => proj.id == id);
 
-    return res.json(projects[id]);
+    project.title =  title ;
+
+    return res.json(project);
 });
 
 server.delete('/projects/:id', (req, res) => {
     const { id } = req.params;
 
-    projects.splice(id, 1);
+    const projectIndex = projects.findIndex(proj => proj.id == id);
+
+    projects.splice(projectIndex, 1);
 
     return res.send();
 });
@@ -50,9 +55,11 @@ server.post('/projects/:id/tasks', (req, res) => {
     const { id } = req.params;
     const { title } = req.body;
 
-    projects[id].tasks.push(title);
+    const project = projects.find(proj => proj.id == id);
+    
+    project.tasks.push(title);
 
-    return res.json(projects[id]);
+    return res.json(project);
 });
 
 server.listen(3000);
